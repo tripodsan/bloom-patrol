@@ -1,7 +1,8 @@
-[gd_scene load_steps=17 format=4 uid="uid://0wsq7rtam4wh"]
+[gd_scene load_steps=20 format=4 uid="uid://0wsq7rtam4wh"]
 
 [ext_resource type="Script" uid="uid://dexw3die45qhl" path="res://scripts/algae.gd" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://bbh2wjbjq8p8b" path="res://assets/tileset.png" id="2_0xm2m"]
+[ext_resource type="Shader" uid="uid://cst5mlxfn1qmj" path="res://shaders/algae.gdshader" id="2_1bvp3"]
 [ext_resource type="Texture2D" uid="uid://b8lwnrw5bjuje" path="res://assets/boat.png" id="3_h2yge"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h2yge"]
@@ -141,8 +142,18 @@ terrain_set_0/terrain_1/name = "land "
 terrain_set_0/terrain_1/color = Color(0.5, 0.4375, 0.25, 1)
 sources/0 = SubResource("TileSetAtlasSource_h2yge")
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ig7tw"]
-size = Vector2(480, 270)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lquwl"]
+shader = ExtResource("2_1bvp3")
+
+[sub_resource type="Gradient" id="Gradient_1bvp3"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_lquwl"]
+gradient = SubResource("Gradient_1bvp3")
+width = 480
+height = 270
+fill = 1
+fill_from = Vector2(0.540915, 0.414239)
+fill_to = Vector2(0.697642, 0.779165)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1bvp3"]
 atlas = ExtResource("3_h2yge")
@@ -232,7 +243,8 @@ tile_map_data = PackedByteArray("AAAHAAkAAAAAAAAAAAAHAAoAAAAAAAAAAAAIAAsAAAAAAAA
 tile_set = SubResource("TileSet_1bvp3")
 
 [node name="algae" type="Sprite2D" parent="world" node_paths=PackedStringArray("land", "boat")]
-texture = SubResource("PlaceholderTexture2D_ig7tw")
+material = SubResource("ShaderMaterial_lquwl")
+texture = SubResource("GradientTexture2D_lquwl")
 centered = false
 script = ExtResource("1_ig7tw")
 land = NodePath("../land")

@@ -6,7 +6,7 @@ const H:int = 270
 const S:int = 4
 const SV:Vector2i = Vector2i(S, S)
 const ST:Vector2i = Vector2i(16, 16)
-const GROW_STEPS:int = 64
+const GROW_STEPS:int = 255
 const C_VOID:Color = Color(0, 0, 0, 0)
 
 @export
@@ -43,11 +43,11 @@ func _ready() -> void:
   boat_pos = boat.position
 
 func _process(delta: float) -> void:
-  if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+  if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
     var v:Vector2 = get_viewport().get_mouse_position()
     v = v.snapped(SV)
-    img[idx].fill_rect(Rect2i(v, SV), Color(0, 1.0/GROW_STEPS, 0, 1))
-  if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+    img[idx].fill_rect(Rect2i(v, SV), Color(0, 1.0, 0, 1))
+  if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
     var v:Vector2 = get_viewport().get_mouse_position()
     boat_pos = v
 
