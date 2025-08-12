@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bk8tynmhoafa1"]
+
+[ext_resource type="Shader" uid="uid://c5w4yxi54wm23" path="res://shaders/tileset.gdshader" id="1_svm5p"]
+
+[resource]
+shader = ExtResource("1_svm5p")
+shader_parameter/debug = false

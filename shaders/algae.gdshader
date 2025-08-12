@@ -34,11 +34,22 @@ void fragment() {
   vec4 c = texture(TEXTURE, ap);
   ivec2 i = p % 4;
   i.y += (p.x / 4) % 2 * 3;
+  int idx = -1;
   if (c.g >= 1.0) {
-    COLOR.rgb = vec3(pat[i.x % 4][i.y % 4]);
+    idx = 4;
+  } else if (c.g > 0.75) {
+    idx = 3;
   } else if (c.g > 0.5) {
-    COLOR.rgb = vec3(pat[i.x][i.y]);
-  } else {
+    idx = 2;
+  } else if (c.g > 0.25) {
+    idx = 1;
+  } else if (c.g > 0.1) {
+    idx = 0;
+  }
+
+  if (idx < 0) {
     COLOR = vec4(0.0);
+  } else {
+    COLOR.rgb = vec3(pat[i.y % 4+ idx * 4][i.x % 4 ]);
   }
 }
