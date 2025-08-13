@@ -8,6 +8,14 @@ const vec4[] pat = {
   vec4(1, 1, 1, 0),
   vec4(0, 0, 0, 0),
   vec4(0, 0, 0, 0),
+  vec4(0, 0, 0, 0),
+  vec4(0, 1, 1, 0),
+  vec4(1, 0, 0, 1),
+  vec4(0, 0, 0, 0),
+  vec4(0, 0, 0, 0),
+  vec4(1, 1, 1, 1),
+  vec4(0, 0, 0, 0),
+  vec4(0, 0, 0, 0),
   vec4(0, 0, 0, 0)
 };
 
@@ -23,17 +31,12 @@ void fragment() {
   if (!debug) {
     if (COLOR.g > COLOR.b) {
       COLOR.rgba = vec4(1.0);
-      if (random(floor(vx)) < 0.03) {
+      if (random(floor(vx)) < 0.02) {
         COLOR.rgb = vec3(0);
       }
-    } else if (COLOR.b > COLOR.g) {
+    } else if (COLOR.rgb == vec3(0.0, 0.0, 1.0)) {
+      // water
       COLOR.rgba = vec4(0);
-      vec2 p = floor(vx / 4.0);
-      ivec2 i = ivec2(vx) % 4;
-      if (random(p) < 0.05) {
-        COLOR.rgba = vec4(0.0, 0.0, 0.0, pat[i.y][i.x]);
-      }
-      //COLOR = texture(water,  tiled_uvs);
     }
   }
 }
