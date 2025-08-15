@@ -10,6 +10,12 @@ const ST:Vector2i = Vector2i(16, 16)
 const GROW_STEPS:int = 255
 const C_VOID:Color = Color(0, 0, 0, 0)
 
+var num_algae:int = 0
+var num_algae_p:int = -1
+var max_algae:int = 0
+
+signal algae_updated(amount:int, total:int)
+
 @export
 var land:TileMapLayer
 
@@ -25,37 +31,52 @@ const DIRS:Array[Vector2i] = [
 ]
 
 var img:Array[Image] = [null, null]
-#var tex:Array[ImageTexture] = [null, null]
 var idx:int = 0
 
 func _ready() -> void:
   for i:int in range(0, 2):
     img[i] = Image.create_empty(W, H, false, Image.FORMAT_RGBA8)
     img[i].fill(C_VOID)
+  # inital algae map
+  max_algae = 0
   texture = ImageTexture.create_from_image(img[0])
   for v:Vector2i in land.get_used_cells():
     var td:TileData = land.get_cell_tile_data(v)
     var p:Vector2 = land.map_to_local(v) - Vector2(8, 8)
-    if p.x >= 0 && p.x + 16 < W && p.y >= 0 && p.y + 16 < H:
-      if td.terrain_set != 0 || td.terrain != 1:
+    if p.x >= 0 && p.x + 8 < W && p.y >= 0 && p.y + 8 < H:
+      if td.terrain_set == 0 && td.terrain == 1:
+        max_algae += 16
+      else:
         var ac:Vector2i = land.get_cell_atlas_coords(v)
         var ts:TileSetAtlasSource = land.tile_set.get_source(land.get_cell_source_id(v))
         var t:Texture2D = ts.texture
         var r:Rect2i = ts.get_tile_texture_region(ac)
         var src:Image = t.get_image();
         # todo: find better way...maybe make water transparent and blit a red image with mask
-        for x in range(0, r.size.x):
-          for y in range(0, r.size.y):
+        for x in range(0, r.size.x, 4):
+          for y in range(0, r.size.y, 4):
             var c:Color = src.get_pixel(x + r.position.x, y + r.position.y)
-            if c != Color.BLUE:
-              img[0].set_pixel(x + p.x, y + p.y, Color.RED)
-    #img[0].fill_rect(Rect2i(p, ST), Color.RED)
+            if c == Color.BLUE:
+              max_algae += 1
+            else:
+              img[0].set_pixel(p.x + x, p.y + y, Color.RED)
   img[1].copy_from(img[0])
 
-func clean(pos:Vector2, radius:float)->float:
-  var v = pos.snapped(SV) - Vector2(8, 8)
-  img[idx].fill_rect(Rect2i(v, SV * 4), Color.BLUE)
-  return 0;
+func clean(pos:Vector2, radius:int, max_collected:int)->int:
+  var src = img[idx]
+  pos = pos.snapped(SV) - Vector2(8, 8)
+  var collected:int = 0
+  for x in range(0, radius * 4, 4):
+    for y in range(0, radius * 4, 4):
+      if collected >= max_collected:
+        return collected
+      var v = Vector2(x, y) + pos
+      var p:Color = src.get_pixelv(v)
+      if p.r == 0:
+        src.fill_rect(Rect2i(v, SV), Color.BLUE)
+      if p.g == 1:
+        collected += 1
+  return collected;
 
 
 func _process(delta: float) -> void:
@@ -65,6 +86,10 @@ func _process(delta: float) -> void:
     img[idx].fill_rect(Rect2i(v, SV), Color(0, 1.0, 0, 1))
 
   update_sim()
+  if num_algae_p != num_algae:
+    algae_updated.emit(num_algae, max_algae)
+    num_algae_p = num_algae
+
   texture.update(img[idx])
 
 func spread(src:Image, img:Image, pos:Vector2i):
@@ -89,6 +114,7 @@ func update_sim():
       var p:Color = src.get_pixelv(v)
       if p.g == 0.0 && p.r == 0.0 && p.b == 0:
         spread(src, dst, v)
+  num_algae = 0
   for y:int in range(0, H, S):
     for x:int in range(0, W, S):
       var v:Vector2i = Vector2i(x, y)
@@ -99,3 +125,5 @@ func update_sim():
       elif p.b > 0.0:
         p.b = max(p.b - 1.0/GROW_STEPS, 0.0)
         dst.fill_rect(Rect2i(v, SV), p)
+      if p.g == 1.0:
+        num_algae += 1

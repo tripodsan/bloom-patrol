@@ -1,13 +1,13 @@
-[gd_resource type="Theme" load_steps=4 format=3 uid="uid://224gym0spw7s"]
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://224gym0spw7s"]
 
 [ext_resource type="Texture2D" uid="uid://dx3lkgt1sujrj" path="res://assets/ui.png" id="1_8344u"]
 [ext_resource type="FontFile" uid="uid://du8fa7scl1q0" path="res://assets/TinyAndChunkyRegular-m2Dz5.ttf" id="2_b5p3p"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3nxcy"]
-content_margin_left = 8.0
-content_margin_top = 2.0
-content_margin_right = 8.0
-content_margin_bottom = 6.0
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
 texture = ExtResource("1_8344u")
 texture_margin_left = 16.0
 texture_margin_top = 8.0
@@ -15,7 +15,37 @@ texture_margin_right = 16.0
 texture_margin_bottom = 8.0
 region_rect = Rect2(0, 0, 96, 32)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8344u"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b5p3p"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 1)
+corner_detail = 1
+anti_aliasing = false
+
+[sub_resource type="FontVariation" id="FontVariation_3nxcy"]
+base_font = ExtResource("2_b5p3p")
+spacing_top = -3
+spacing_bottom = 1
+
 [resource]
-default_font = ExtResource("2_b5p3p")
+default_font = SubResource("FontVariation_3nxcy")
 default_font_size = 10
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_3nxcy")
+ProgressBar/colors/font_color = Color(1, 1, 1, 1)
+ProgressBar/styles/background = SubResource("StyleBoxFlat_8344u")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_b5p3p")

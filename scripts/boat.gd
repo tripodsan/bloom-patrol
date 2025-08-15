@@ -1,12 +1,16 @@
 extends CharacterBody2D
+class_name Boat
 
 @export var speed = 300
 
 @onready var sprite: AnimatedSprite2D = $sprite
 
-@export var algae:Algae
-
 var target_pos: Vector2
+
+signal boat_moved(pos:Vector2)
+
+var num_cargo:int = 0
+var max_cargo:int = 100
 
 func _ready() -> void:
   target_pos = position
@@ -22,8 +26,6 @@ func _physics_process(delta):
     if a < 0: a += 360
     a = round(a / 45)
     sprite.frame = a
-    algae.clean(position, 8.0)
-
-
+    boat_moved.emit(position)
 
   move_and_slide()
