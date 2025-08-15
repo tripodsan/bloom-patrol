@@ -1,31 +1,55 @@
 extends Node2D
+class_name Game
 
 @onready var lab_algae: Label = %lab_algae
 @onready var lab_cargo: Label = %lab_cargo
 
-@export var algae:Algae
-@export var boat:Boat
+@onready var level: Node2D = $level
+@onready var title: Control = $ui/title
+@onready var info: CenterContainer = $ui/info
+@onready var gui: MarginContainer = $ui/gui
 
-@export var drop_off:Area2D
 
 func _ready()->void:
-  algae.algae_updated.connect(_on_algae_updated)
-  boat.boat_moved.connect(_on_boat_moved)
-  drop_off.body_entered.connect(_on_body_entered_drop_off)
-  update_cargo_label()
+  show_title()
 
 func _on_algae_updated(amount:int, total: int)->void:
   lab_algae.text = 'ALGAE: %d / %d' % [amount, total]
 
-func _on_boat_moved(pos:Vector2)->void:
-  var collected = algae.clean(pos, 4, boat.max_cargo - boat.num_cargo)
-  if collected > 0:
-    boat.num_cargo += collected
-    update_cargo_label()
+func _on_boat_updated(amount:int, total:int)->void:
+  lab_cargo.text = 'CARGO: %d / %d' % [amount, total]
 
-func update_cargo_label()->void:
-  lab_cargo.text = 'CARGO: %d / %d' % [boat.num_cargo, boat.max_cargo]
+func show_title():
+  title.visible = true
+  level.visible = false
+  info.visible = false
+  gui.visible = false
+  get_tree().paused = true
+  title.animate()
 
-func _on_body_entered_drop_off(body:Node2D)->void:
-  boat.num_cargo = 0
-  update_cargo_label()
+func level_init():
+  title.visible = false
+  info.visible = true
+  level.visible = true
+
+func game_start():
+  info.visible = false
+  gui.visible = true
+  get_tree().paused = false
+
+  level.algae_updated.connect(_on_algae_updated)
+  level.boat_updated.connect(_on_boat_updated)
+
+
+func _on_btn_start_pressed() -> void:
+  level_init()
+
+func _on_btn_level_start_pressed() -> void:
+  game_start()
+
+func _on_btn_settings_pressed() -> void:
+  pass # Replace with function body.
+
+
+func _on_btn_credits_pressed() -> void:
+  pass # Replace with function body.

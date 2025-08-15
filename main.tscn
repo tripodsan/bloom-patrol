@@ -1,10 +1,11 @@
-[gd_scene load_steps=50 format=4 uid="uid://0wsq7rtam4wh"]
+[gd_scene load_steps=55 format=4 uid="uid://0wsq7rtam4wh"]
 
 [ext_resource type="Shader" uid="uid://ckhnut06ijjw6" path="res://shaders/water.gdshader" id="1_7mycd"]
 [ext_resource type="Script" uid="uid://dexw3die45qhl" path="res://scripts/algae.gd" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://cyll3cpbhdua4" path="res://scripts/game.gd" id="1_ycdy4"]
 [ext_resource type="Texture2D" uid="uid://bbh2wjbjq8p8b" path="res://assets/tileset.png" id="2_0xm2m"]
 [ext_resource type="Shader" uid="uid://cst5mlxfn1qmj" path="res://shaders/algae.gdshader" id="2_1bvp3"]
+[ext_resource type="Script" uid="uid://dprv6w0qakr6n" path="res://scripts/level.gd" id="2_w48qg"]
 [ext_resource type="Texture2D" uid="uid://cjdw07yw28qtl" path="res://assets/algae-test.png" id="3_efxa6"]
 [ext_resource type="Texture2D" uid="uid://b8lwnrw5bjuje" path="res://assets/boat.png" id="3_h2yge"]
 [ext_resource type="Material" uid="uid://bk8tynmhoafa1" path="res://shaders/tileset-mat.tres" id="3_lquwl"]
@@ -13,6 +14,10 @@
 [ext_resource type="Texture2D" uid="uid://dp3b4au7lx8yo" path="res://assets/lighthouse.png" id="9_kek77"]
 [ext_resource type="Texture2D" uid="uid://br1qugf3h7o8o" path="res://assets/wind.png" id="10_4c57u"]
 [ext_resource type="Theme" uid="uid://224gym0spw7s" path="res://assets/ui-theme.tres" id="12_dg77c"]
+[ext_resource type="Script" uid="uid://bvxd47pelbuby" path="res://scripts/title.gd" id="15_074og"]
+[ext_resource type="Texture2D" uid="uid://lcth1qldwhwj" path="res://assets/title.png" id="15_yaehf"]
+[ext_resource type="Texture2D" uid="uid://di031ul6tjdot" path="res://assets/logo.png" id="16_074og"]
+[ext_resource type="Texture2D" uid="uid://b2vmg14bw5f31" path="res://assets/title-boat.png" id="17_cegan"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_272bh"]
 shader = ExtResource("1_7mycd")
@@ -955,16 +960,19 @@ func _process(delta: float) -> void:
   text = 'FPS: %d' % Engine.get_frames_per_second()
 "
 
-[node name="game" type="Node2D" node_paths=PackedStringArray("algae", "boat", "drop_off")]
+[node name="game" type="Node2D"]
 texture_filter = 1
 script = ExtResource("1_ycdy4")
-algae = NodePath("world/algae")
-boat = NodePath("world/boat")
-drop_off = NodePath("world/drop_off")
 
-[node name="world" type="Node2D" parent="."]
+[node name="level" type="Node2D" parent="." node_paths=PackedStringArray("algae", "boat", "drop_off", "spawn")]
+process_mode = 1
+script = ExtResource("2_w48qg")
+algae = NodePath("algae")
+boat = NodePath("boat")
+drop_off = NodePath("drop_off")
+spawn = NodePath("spawn")
 
-[node name="water" type="ColorRect" parent="world"]
+[node name="water" type="ColorRect" parent="level"]
 material = SubResource("ShaderMaterial_272bh")
 custom_minimum_size = Vector2(480, 270)
 offset_right = 480.0
@@ -972,7 +980,7 @@ offset_bottom = 270.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="algae" type="Sprite2D" parent="world" node_paths=PackedStringArray("land")]
+[node name="algae" type="Sprite2D" parent="level" node_paths=PackedStringArray("land")]
 material = SubResource("ShaderMaterial_lquwl")
 texture = ExtResource("3_efxa6")
 centered = false
@@ -980,86 +988,86 @@ script = ExtResource("1_ig7tw")
 land = NodePath("../land")
 metadata/_edit_lock_ = true
 
-[node name="land" type="TileMapLayer" parent="world"]
+[node name="land" type="TileMapLayer" parent="level"]
 material = ExtResource("3_lquwl")
 tile_map_data = PackedByteArray("AAAHAAcAAQAIAAYAAAAHAAgAAQAIAAYAAAAHAAkAAQAIAAYAAAAIAAkAAQAIAAYAAAAJAAkAAQAIAAYAAAAJAAgAAQAIAAYAAAAJAAcAAQAIAAYAAAAJAAYAAQAIAAYAAAAIAAcAAQAIAAYAAAAIAAgAAQAIAAYAAAAKAAgAAQAIAAYAAAALAAgAAQAIAAYAAAAMAAgAAQAIAAYAAAANAAgAAQAAAAQAAAAOAAgAAQABAAEAAAAPAAgAAQABAAEAAAAPAAcAAQAIAAUAAAAOAAcAAQAGAAIAAAANAAcAAQAAAAAAAAAMAAcAAQAIAAYAAAALAAcAAQAIAAYAAAAKAAcAAQAIAAYAAAAKAAkAAQAIAAYAAAALAAkAAQAIAAYAAAAMAAkAAQAIAAYAAAANAAkAAQAAAAYAAAAOAAkAAQAEAAYAAAAPAAkAAQAFAAYAAAAQAAkAAQADAAYAAAAIAAYAAQAIAAYAAAAHAAYAAQAIAAYAAAAGAAcAAQAIAAYAAAAGAAgAAQAIAAYAAAAGAAkAAQAIAAYAAAAGAAoAAQAIAAYAAAAHAAoAAQAIAAYAAAAIAAoAAQAIAAYAAAAJAAoAAQAIAAYAAAAKAAoAAQAIAAYAAAALAAoAAQAIAAYAAAAMAAoAAQAIAAYAAAANAAoAAQAIAAYAAAAOAAoAAQAIAAYAAAAPAAoAAQAIAAYAAAAQAAoAAQAIAAYAAAARAAoAAQAIAAYAAAARAAkAAQABAAYAAAARAAYAAQAMAAAAAAAQAAYAAQALAAAAAAAPAAYAAQAIAAAAAAAOAAYAAQAAAAUAAAANAAYAAQAIAAYAAAAMAAYAAQAIAAYAAAALAAYAAQAIAAYAAAAKAAYAAQAIAAYAAAAGAAYAAQAHAAYAAAAFAAYAAQADAAYAAAAFAAcAAQAIAAYAAAAFAAgAAQAIAAYAAAAFAAkAAQAIAAYAAAAFAAoAAQAIAAYAAAAFAAsAAQAIAAYAAAAGAAsAAQAIAAYAAAAHAAsAAQAIAAYAAAAIAAsAAQAIAAYAAAAJAAsAAQAIAAYAAAAKAAsAAQAIAAYAAAALAAsAAQAIAAYAAAAMAAsAAQAIAAYAAAANAAsAAQAIAAYAAAAOAAsAAQAIAAYAAAAPAAsAAQAIAAYAAAAQAAsAAQAIAAYAAAARAAsAAQAIAAYAAAASAAsAAQAIAAYAAAASAAoAAQAIAAYAAAASAAkAAQAHAAYAAAASAAgAAQAFAAEAAAASAAcAAQABAAEAAAASAAYAAQABAAEAAAASAAUAAQADAAAAAAARAAUAAQABAAAAAAAQAAUAAQADAAAAAAAPAAUAAQABAAAAAAAOAAUAAQAAAAAAAAANAAUAAQAIAAYAAAAMAAUAAQAIAAYAAAALAAUAAQAIAAYAAAAKAAUAAQAIAAYAAAAJAAUAAQAIAAYAAAAIAAUAAQAIAAYAAAAHAAUAAQAHAAYAAAAGAAUAAQAFAAEAAAAHAAwAAQAIAAYAAAAIAAwAAQAIAAYAAAAJAAwAAQAIAAYAAAAKAAwAAQAIAAYAAAALAAwAAQAIAAYAAAAMAAwAAQAIAAYAAAAOAAwAAQAIAAYAAAAPAAwAAQAIAAYAAAAQAAwAAQAIAAYAAAARAAwAAQAIAAYAAAASAAwAAQAIAAYAAAATAAwAAQAIAAYAAAATAAsAAQAIAAYAAAATAAoAAQAIAAYAAAATAAkAAQAIAAYAAAATAAgAAQAHAAYAAAATAAcAAQAHAAEAAAATAAYAAQAHAAMAAAATAAUAAQAHAAAAAAATAAQAAQAIAAYAAAASAAQAAQAIAAYAAAARAAQAAQAIAAYAAAAQAAQAAQAIAAYAAAAPAAQAAQAIAAYAAAAOAAQAAQAIAAYAAAANAAQAAQAIAAYAAAAMAAQAAQAIAAYAAAALAAQAAQAIAAYAAAAKAAQAAQAIAAYAAAAJAAQAAQAIAAYAAAAIAAQAAQAIAAYAAAAHAAQAAQAHAAAAAAAGAAQAAQAFAAIAAAAFAAQAAQABAAEAAAAFAAUAAQABAAEAAAAEAAUAAQAGAAEAAAAEAAQAAQABAAEAAAAEAAMAAQABAAEAAAAEAAYAAQAAAAYAAAAEAAcAAQAIAAYAAAAEAAgAAQAIAAYAAAAEAAkAAQAIAAYAAAAEAAoAAQAIAAYAAAAEAAsAAQAIAAYAAAAEAAwAAQAIAAYAAAAEAA0AAQAIAAYAAAAFAAwAAQAIAAYAAAAGAAwAAQAIAAYAAAAFAA0AAQAIAAYAAAAGAA0AAQAIAAYAAAAHAA0AAQAIAAYAAAAIAA0AAQAAAAAAAAAJAA0AAQADAAAAAAAKAA0AAQAHAAAAAAALAA0AAQAIAAYAAAAMAA0AAQAIAAYAAAANAA0AAQAIAAYAAAAOAA0AAQAIAAYAAAAPAA0AAQAIAAYAAAAQAA0AAQAIAAYAAAARAA0AAQAIAAYAAAASAA0AAQAIAAYAAAATAA0AAQAIAAYAAAAUAA0AAQAAAAAAAAAUAAwAAQAIAAYAAAAUAAsAAQAIAAYAAAAUAAoAAQAIAAYAAAAUAAkAAQAIAAYAAAAUAAgAAQAIAAYAAAAUAAcAAQAIAAYAAAAUAAYAAQAIAAYAAAAUAAUAAQAIAAYAAAAUAAQAAQAIAAYAAAAUAAMAAQAIAAYAAAATAAMAAQAIAAYAAAASAAMAAQAIAAYAAAARAAMAAQAIAAYAAAAQAAMAAQAIAAYAAAAPAAMAAQAIAAYAAAANAAMAAQAIAAYAAAAOAAMAAQAIAAYAAAAMAAMAAQAIAAYAAAALAAMAAQAIAAYAAAAKAAMAAQAIAAYAAAAJAAMAAQAIAAYAAAAIAAMAAQAIAAYAAAAHAAMAAQAIAAYAAAAGAAMAAQAHAAEAAAAFAAMAAQABAAEAAAAFAAIAAQABAAEAAAAEAAIAAQAMAAUAAAAEAAEAAQAMAAQAAAADAAYAAQAIAAYAAAADAAUAAQACAAYAAAADAAQAAQABAAEAAAADAAMAAQABAAEAAAADAAIAAQALAAUAAAADAAEAAQAKAAIAAAACAAYAAQAIAAYAAAACAAQAAQABAAEAAAACAAMAAQABAAEAAAACAAIAAQAKAAUAAAACAAEAAQAJAAIAAAABAAYAAQAHAAIAAAABAAQAAQABAAEAAAABAAMAAQAMAAUAAAABAAIAAQAKAAMAAAABAAEAAQAJAAIAAAAdABAAAQAJAAIAAAAdAA8AAQALAAAAAAAdAA4AAQABAAEAAAAdAAsAAQABAAEAAAAdAAoAAQABAAEAAAAdAAkAAQABAAEAAAAdAAUAAQABAAEAAAAdAAQAAQABAAEAAAAdAAMAAQABAAEAAAAdAAIAAQABAAEAAAAdAAEAAQABAAEAAAAdAAAAAQABAAEAAAAcABAAAQALAAIAAAAcAA8AAQAKAAAAAAAcAA4AAQABAAEAAAAcAA0AAQABAAEAAAAcAAwAAQABAAEAAAAcAAsAAQAGAAIAAAAcAAoAAQAAAAIAAAAcAAkAAQAGAAEAAAAcAAQAAQABAAEAAAAcAAMAAQABAAEAAAAcAAIAAQABAAEAAAAcAAEAAQABAAEAAAAcAAAAAQABAAEAAAAbABAAAQAJAAIAAAAbAA8AAQAKAAQAAAAbAA4AAQAMAAAAAAAbAA0AAQABAAEAAAAbAAwAAQABAAEAAAAbAAsAAQAFAAAAAAAbAAoAAQAIAAYAAAAbAAUAAQABAAEAAAAbAAQAAQAGAAIAAAAbAAMAAQAAAAMAAAAbAAIAAQAAAAEAAAAbAAEAAQAGAAEAAAAbAAAAAQABAAEAAAAaABAAAQAKAAIAAAAaAA8AAQAKAAIAAAAaAA4AAQAJAAAAAAAaAA0AAQABAAEAAAAaAAwAAQABAAEAAAAaAAsAAQAFAAAAAAAaAAoAAQAIAAYAAAAaAAkAAQAAAAYAAAAaAAUAAQAAAAMAAAAaAAQAAQAAAAAAAAAaAAMAAQAIAAYAAAAaAAIAAQAIAAYAAAAaAAEAAQAGAAYAAAAaAAAAAQABAAEAAAAZABAAAQAJAAIAAAAZAA8AAQAJAAIAAAAZAA4AAQAJAAAAAAAZAA0AAQAGAAIAAAAZAAwAAQAAAAUAAAAZAAsAAQAAAAAAAAAZAAoAAQAIAAYAAAAZAAkAAQAIAAYAAAAZAAgAAQAIAAYAAAAZAAUAAQAIAAYAAAAZAAQAAQAIAAYAAAAZAAMAAQAIAAYAAAAZAAIAAQAIAAYAAAAZAAEAAQAFAAYAAAAZAAAAAQABAAEAAAAYABAAAQALAAIAAAAYAA8AAQALAAIAAAAYAA4AAQAKAAAAAAAYAA0AAQABAAAAAAAYAAwAAQAIAAYAAAAYAAsAAQAIAAYAAAAYAAoAAQAIAAYAAAAYAAkAAQAIAAYAAAAYAAgAAQAIAAYAAAAYAAUAAQAIAAYAAAAYAAQAAQAIAAYAAAAYAAMAAQAIAAYAAAAYAAIAAQAIAAYAAAAYAAEAAQAGAAYAAAAYAAAAAQABAAEAAAAXABAAAQALAAIAAAAXAA8AAQAKAAIAAAAXAA4AAQAKAAAAAAAXAA0AAQADAAAAAAAXAAwAAQAIAAYAAAAXAAsAAQAIAAYAAAAXAAoAAQAIAAYAAAAXAAkAAQAIAAYAAAAXAAgAAQAIAAYAAAAXAAUAAQAIAAYAAAAXAAQAAQAIAAYAAAAXAAMAAQAIAAYAAAAXAAIAAQAIAAYAAAAXAAEAAQAGAAYAAAAXAAAAAQABAAEAAAAWABAAAQAKAAIAAAAWAA8AAQALAAQAAAAWAA4AAQAIAAAAAAAWAA0AAQAFAAAAAAAWAAwAAQAIAAYAAAAWAAsAAQAIAAYAAAAWAAoAAQAIAAYAAAAWAAkAAQAIAAYAAAAWAAgAAQAIAAYAAAAWAAcAAQAIAAYAAAAWAAYAAQAIAAYAAAAWAAUAAQAIAAYAAAAWAAQAAQAIAAYAAAAWAAMAAQAIAAYAAAAWAAIAAQAIAAYAAAAWAAEAAQABAAYAAAAWAAAAAQABAAEAAAAVABAAAQAIAAEAAAAVAA8AAQAIAAAAAAAVAA4AAQABAAEAAAAVAA0AAQAEAAAAAAAVAAwAAQAIAAYAAAAVAAsAAQAIAAYAAAAVAAoAAQAIAAYAAAAVAAkAAQAIAAYAAAAVAAgAAQAIAAYAAAAVAAcAAQAIAAYAAAAVAAYAAQAIAAYAAAAVAAUAAQAIAAYAAAAVAAQAAQAIAAYAAAAVAAMAAQAIAAYAAAAVAAIAAQAIAAYAAAAVAAEAAQADAAYAAAAVAAAAAQABAAEAAAAUABAAAQABAAEAAAAUAA8AAQABAAEAAAAUAA4AAQAGAAIAAAAUAAIAAQAIAAYAAAAUAAEAAQAEAAYAAAAUAAAAAQABAAEAAAATABAAAQABAAEAAAATAA8AAQABAAEAAAATAA4AAQAEAAAAAAATAAIAAQAIAAYAAAATAAEAAQABAAYAAAATAAAAAQABAAEAAAASABAAAQABAAEAAAASAA8AAQABAAEAAAASAA4AAQABAAAAAAASAAIAAQAIAAYAAAASAAEAAQADAAYAAAASAAAAAQAMAAUAAAARABAAAQABAAEAAAARAA8AAQABAAEAAAARAA4AAQAEAAAAAAARAAIAAQAIAAYAAAARAAEAAQAGAAYAAAARAAAAAQALAAUAAAAQABAAAQABAAEAAAAQAA8AAQABAAEAAAAQAA4AAQAGAAAAAAAQAAIAAQAIAAYAAAAQAAEAAQAGAAYAAAAQAAAAAQALAAUAAAAPABAAAQABAAEAAAAPAA8AAQABAAEAAAAPAA4AAQAGAAAAAAAPAAIAAQAIAAYAAAAPAAEAAQAFAAYAAAAPAAAAAQALAAUAAAAOABAAAQABAAEAAAAOAA8AAQAGAAIAAAAOAA4AAQAAAAAAAAAOAAIAAQAIAAYAAAAOAAEAAQAGAAYAAAAOAAAAAQAJAAUAAAANAA4AAQAIAAYAAAANAAIAAQAIAAYAAAANAAEAAQAEAAYAAAANAAAAAQAKAAUAAAAMAA4AAQAIAAYAAAAMAAIAAQAIAAYAAAAMAAEAAQADAAYAAAAMAAAAAQAKAAUAAAALABAAAQABAAEAAAALAA8AAQACAAAAAAALAA4AAQAIAAYAAAALAAIAAQAIAAYAAAALAAEAAQABAAYAAAALAAAAAQAKAAUAAAAKABAAAQABAAEAAAAKAA8AAQAFAAIAAAAKAA4AAQAHAAEAAAAKAAIAAQAIAAYAAAAKAAEAAQAEAAYAAAAKAAAAAQAJAAUAAAAJABAAAQABAAEAAAAJAA8AAQABAAEAAAAJAA4AAQABAAEAAAAJAAIAAQAIAAYAAAAJAAEAAQAEAAYAAAAJAAAAAQALAAUAAAAIABAAAQABAAEAAAAIAA8AAQAGAAIAAAAIAA4AAQAAAAUAAAAIAAIAAQAIAAYAAAAIAAEAAQAFAAYAAAAIAAAAAQAJAAUAAAAHABAAAQABAAEAAAAHAA8AAQACAAAAAAAHAA4AAQAIAAYAAAAHAAIAAQAHAAYAAAAHAAEAAQAFAAEAAAAHAAAAAQALAAUAAAAGABAAAQABAAEAAAAGAA8AAQAFAAAAAAAGAA4AAQAIAAYAAAAGAAIAAQAFAAEAAAAGAAEAAQABAAEAAAAGAAAAAQAJAAUAAAAFABAAAQABAAEAAAAFAA8AAQACAAAAAAAFAA4AAQAIAAYAAAAFAAAAAQAKAAUAAAAEABAAAQABAAEAAAAEAA8AAQADAAAAAAAEAA4AAQAIAAYAAAAEAAAAAQAKAAMAAAADABAAAQABAAEAAAADAA8AAQAEAAAAAAADAA4AAQAIAAYAAAADAA0AAQAIAAYAAAADAAwAAQAIAAYAAAADAAsAAQAIAAYAAAADAAoAAQAIAAYAAAADAAkAAQAIAAYAAAADAAgAAQAIAAYAAAADAAcAAQAIAAYAAAADAAAAAQALAAIAAAACABAAAQABAAEAAAACAA8AAQABAAAAAAACAA4AAQAIAAYAAAACAA0AAQAIAAYAAAACAAwAAQAIAAYAAAACAAsAAQAIAAYAAAACAAoAAQAIAAYAAAACAAkAAQAIAAYAAAACAAgAAQAIAAYAAAACAAcAAQAIAAYAAAACAAAAAQAKAAIAAAABABAAAQABAAEAAAABAA8AAQAFAAIAAAABAA4AAQAHAAIAAAABAA0AAQAHAAMAAAABAAwAAQAHAAQAAAABAAsAAQAFAAoAAAABAAoAAQAFAAkAAAABAAkAAQAHAAQAAAABAAgAAQAHAAMAAAABAAcAAQAHAAQAAAABAAAAAQAJAAIAAAAAABAAAQAMAAMAAAAAAA8AAQAMAAAAAAAAAA4AAQABAAEAAAAAAA0AAQABAAEAAAAAAAwAAQABAAEAAAAAAAsAAQAEAAoAAAAAAAoAAQAEAAkAAAAAAAkAAQABAAEAAAAAAAgAAQABAAEAAAAAAAcAAQABAAEAAAAAAAYAAQABAAEAAAAAAAUAAQABAAEAAAAAAAQAAQAMAAUAAAAAAAMAAQAKAAMAAAAAAAIAAQAJAAIAAAAAAAEAAQALAAIAAAAAAAAAAQAKAAIAAAACAAUAAQAGAAYAAAABAAUAAQAFAAEAAAAeAAAAAQABAAEAAAAeAAEAAQABAAEAAAAeAAIAAQABAAEAAAAeAAMAAQABAAEAAAAeAAQAAQABAAEAAAAeAAUAAQABAAEAAAAeAAkAAQABAAEAAAAeAAoAAQABAAEAAAAeAAsAAQABAAEAAAAeAAwAAQABAAEAAAAeAA0AAQABAAEAAAAeAA4AAQABAAEAAAAeAA8AAQAMAAAAAAAeABAAAQAMAAQAAAAeABEAAQAMAAUAAAAdABEAAQAKAAUAAAAcABEAAQAJAAUAAAAbABEAAQALAAUAAAAaABEAAQAKAAUAAAAZABEAAQAKAAUAAAAYABEAAQAKAAUAAAAXABEAAQALAAUAAAAWABEAAQALAAUAAAAVABEAAQAIAAUAAAAUABEAAQABAAEAAAATABEAAQABAAEAAAASABEAAQABAAEAAAARABEAAQABAAEAAAAQABEAAQABAAEAAAAPABEAAQABAAEAAAAOABEAAQABAAEAAAANABEAAQABAAEAAAAMABEAAQABAAEAAAALABEAAQABAAEAAAAKABEAAQABAAEAAAAJABEAAQABAAEAAAAIABEAAQABAAEAAAAHABEAAQABAAEAAAAGABEAAQABAAEAAAAFABEAAQABAAEAAAAEABEAAQABAAEAAAADABEAAQABAAEAAAACABEAAQABAAEAAAABABEAAQABAAEAAAAAABEAAQAMAAUAAAD//xEAAQAIAAUAAAD//xAAAQAIAAEAAAD//w8AAQAIAAAAAAD//w4AAQABAAEAAAD//w0AAQABAAEAAAD//wwAAQABAAEAAAD//wsAAQABAAEAAAD//woAAQABAAEAAAD//wkAAQABAAEAAAD//wcAAQABAAEAAAD//wYAAQABAAEAAAD//wUAAQABAAEAAAD//wQAAQAKAAUAAAD//wMAAQAIAAIAAAD//wIAAQAIAAQAAAD//wEAAQAIAAIAAAD//wAAAQAIAAIAAAD/////AQAIAAAAAAAAAP//AQALAAAAAAABAP//AQALAAAAAAACAP//AQAJAAAAAAADAP//AQAJAAAAAAAEAP//AQAKAAAAAAAFAP//AQALAAAAAAAGAP//AQALAAAAAAAHAP//AQAJAAAAAAAIAP//AQAJAAAAAAAJAP//AQALAAAAAAAKAP//AQAKAAAAAAALAP//AQAJAAAAAAAMAP//AQAJAAAAAAANAP//AQAJAAAAAAAOAP//AQALAAAAAAAPAP//AQAJAAAAAAAQAP//AQALAAAAAAARAP//AQAJAAAAAAASAP//AQAMAAAAAAATAP//AQABAAEAAAAUAP//AQABAAEAAAAeAP//AQABAAEAAAAdAP//AQABAAEAAAAcAP//AQABAAEAAAAbAP//AQABAAEAAAAaAP//AQABAAEAAAAZAP//AQABAAEAAAAYAP//AQABAAEAAAAXAP//AQABAAEAAAAWAP//AQABAAEAAAAVAP//AQABAAEAAAD//wgAAQABAAEAAAAFAAEAAQABAAEAAAANAAwAAQAIAAYAAAAMAA8AAQACAAcAAAAMABAAAQACAAgAAAANAA8AAQADAAcAAAANABAAAQADAAgAAAAZAAYAAQAIAAYAAAAYAAYAAQAIAAYAAAAXAAYAAQAIAAYAAAAXAAcAAQAIAAYAAAAYAAcAAQAIAAYAAAAZAAcAAQAIAAYAAAAeAAgAAQABAAEAAAAeAAcAAQABAAEAAAAeAAYAAQABAAEAAAAdAAgAAQABAAEAAAAbAAkAAQAEAAYAAAAdAAwAAQABAAEAAAAdAA0AAQABAAEAAAARAAcAAQAMAAUAAAARAAgAAQABAAEAAAAQAAgAAQABAAEAAAAQAAcAAQALAAUAAAAaAAYAAQAJAAgAAAAdAAYAAQABAAEAAAAdAAcAAQABAAEAAAAcAAUAAQABAAEAAAA=")
 tile_set = SubResource("TileSet_1bvp3")
 metadata/_edit_lock_ = true
 
-[node name="objects" type="TileMapLayer" parent="world"]
+[node name="objects" type="TileMapLayer" parent="level"]
 tile_map_data = PackedByteArray("AAAEAAMAAQACAAMAAAAFAAEAAQACAAMAAAAUAAAAAQACAAMAAAAdAAIAAQACAAMAAAAeAAUAAQACAAMAAAAdAA4AAQACAAMAAAATAA8AAQACAAMAAAAGABAAAQACAAQAAAAJAA4AAQACAAQAAAAAAA4AAQACAAQAAAAAAAUAAQACAAQAAAAOAAgAAQABAAQAAAARABAAAQACAAQAAAAaAA0AAQACAAQAAAAdAAsAAQACAAQAAAAUABAAAQADAAQAAAA=")
 tile_set = SubResource("TileSet_1bvp3")
 metadata/_edit_lock_ = true
 
-[node name="townhouse" type="Sprite2D" parent="world/objects"]
+[node name="townhouse" type="Sprite2D" parent="level/objects"]
 position = Vector2(472, 212)
 texture = SubResource("AtlasTexture_cegan")
 
-[node name="townhouse1" type="Sprite2D" parent="world/objects"]
+[node name="townhouse1" type="Sprite2D" parent="level/objects"]
 position = Vector2(273, 134)
 texture = SubResource("AtlasTexture_cegan")
 
-[node name="skyscraper" type="Sprite2D" parent="world/objects"]
+[node name="skyscraper" type="Sprite2D" parent="level/objects"]
 position = Vector2(254, 126)
 texture = SubResource("AtlasTexture_82xsv")
 
-[node name="skyscraper2" type="Sprite2D" parent="world/objects"]
+[node name="skyscraper2" type="Sprite2D" parent="level/objects"]
 position = Vector2(53, 257)
 texture = SubResource("AtlasTexture_074og")
 
-[node name="skyscraper3" type="Sprite2D" parent="world/objects"]
+[node name="skyscraper3" type="Sprite2D" parent="level/objects"]
 position = Vector2(423, 187)
 texture = SubResource("AtlasTexture_074og")
 
-[node name="skyscraper4" type="Sprite2D" parent="world/objects"]
+[node name="skyscraper4" type="Sprite2D" parent="level/objects"]
 position = Vector2(440, 192)
 texture = SubResource("AtlasTexture_074og")
 
-[node name="hut" type="Sprite2D" parent="world/objects"]
+[node name="hut" type="Sprite2D" parent="level/objects"]
 position = Vector2(298, 123)
 texture = SubResource("AtlasTexture_getpj")
 
-[node name="hut2" type="Sprite2D" parent="world/objects"]
+[node name="hut2" type="Sprite2D" parent="level/objects"]
 position = Vector2(263, 248)
 texture = SubResource("AtlasTexture_getpj")
 
-[node name="hut3" type="Sprite2D" parent="world/objects"]
+[node name="hut3" type="Sprite2D" parent="level/objects"]
 position = Vector2(6, 118)
 texture = SubResource("AtlasTexture_getpj")
 
-[node name="hut4" type="Sprite2D" parent="world/objects"]
+[node name="hut4" type="Sprite2D" parent="level/objects"]
 position = Vector2(89, 76)
 texture = SubResource("AtlasTexture_getpj")
 
-[node name="house" type="Sprite2D" parent="world/objects"]
+[node name="house" type="Sprite2D" parent="level/objects"]
 position = Vector2(73, 74)
 texture = SubResource("AtlasTexture_ryguw")
 
-[node name="house2" type="Sprite2D" parent="world/objects"]
+[node name="house2" type="Sprite2D" parent="level/objects"]
 position = Vector2(344, 239)
 texture = SubResource("AtlasTexture_ryguw")
 
-[node name="house3" type="Sprite2D" parent="world/objects"]
+[node name="house3" type="Sprite2D" parent="level/objects"]
 position = Vector2(469, 106)
 texture = SubResource("AtlasTexture_ryguw")
 
-[node name="house4" type="Sprite2D" parent="world/objects"]
+[node name="house4" type="Sprite2D" parent="level/objects"]
 position = Vector2(456, 54)
 texture = SubResource("AtlasTexture_ryguw")
 
-[node name="townhouse-b" type="Sprite2D" parent="world/objects"]
+[node name="townhouse-b" type="Sprite2D" parent="level/objects"]
 position = Vector2(455, 30)
 texture = SubResource("AtlasTexture_d13ii")
 
-[node name="townhouse-b2" type="Sprite2D" parent="world/objects"]
+[node name="townhouse-b2" type="Sprite2D" parent="level/objects"]
 position = Vector2(465, 31)
 texture = SubResource("AtlasTexture_d13ii")
 
-[node name="townhouse-b3" type="Sprite2D" parent="world/objects"]
+[node name="townhouse-b3" type="Sprite2D" parent="level/objects"]
 position = Vector2(290, 102)
 texture = SubResource("AtlasTexture_d13ii")
 
-[node name="boat" type="CharacterBody2D" parent="world"]
+[node name="boat" type="CharacterBody2D" parent="level"]
 position = Vector2(418, 117)
 collision_layer = 3
 motion_mode = 1
@@ -1067,71 +1075,153 @@ slide_on_ceiling = false
 script = ExtResource("6_272bh")
 metadata/_edit_group_ = true
 
-[node name="sprite" type="AnimatedSprite2D" parent="world/boat"]
+[node name="sprite" type="AnimatedSprite2D" parent="level/boat"]
 sprite_frames = SubResource("SpriteFrames_dg77c")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="world/boat"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="level/boat"]
 position = Vector2(0, 0.5)
 shape = SubResource("CircleShape2D_7mycd")
 
-[node name="drop_off" type="Area2D" parent="world"]
+[node name="drop_off" type="Area2D" parent="level"]
 position = Vector2(440, 117)
 collision_layer = 0
 collision_mask = 2
 metadata/_edit_group_ = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="world/drop_off"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="level/drop_off"]
 shape = SubResource("CircleShape2D_ycdy4")
 
-[node name="factory" type="AnimatedSprite2D" parent="world"]
+[node name="factory" type="AnimatedSprite2D" parent="level"]
 position = Vector2(453, 88)
 sprite_frames = SubResource("SpriteFrames_2cqfq")
 autoplay = "default"
 frame_progress = 0.154581
 
-[node name="lighthouse" type="AnimatedSprite2D" parent="world"]
+[node name="lighthouse" type="AnimatedSprite2D" parent="level"]
 position = Vector2(432, 131)
 sprite_frames = SubResource("SpriteFrames_074og")
 frame_progress = 0.825238
 
-[node name="wind" type="AnimatedSprite2D" parent="world"]
+[node name="wind" type="AnimatedSprite2D" parent="level"]
 position = Vector2(13, 77)
 sprite_frames = SubResource("SpriteFrames_xuqvo")
 autoplay = "default"
 frame_progress = 0.684708
 
-[node name="wind2" type="AnimatedSprite2D" parent="world"]
+[node name="wind2" type="AnimatedSprite2D" parent="level"]
 position = Vector2(50, 59)
 sprite_frames = SubResource("SpriteFrames_xuqvo")
 autoplay = "default"
 frame_progress = 0.675413
 
-[node name="wind3" type="AnimatedSprite2D" parent="world"]
+[node name="wind3" type="AnimatedSprite2D" parent="level"]
 position = Vector2(31, 64)
 sprite_frames = SubResource("SpriteFrames_xuqvo")
 autoplay = "default"
 frame_progress = 0.675413
 
-[node name="wind4" type="AnimatedSprite2D" parent="world"]
+[node name="wind4" type="AnimatedSprite2D" parent="level"]
 position = Vector2(393, 236)
 sprite_frames = SubResource("SpriteFrames_xuqvo")
 autoplay = "default"
 frame_progress = 0.675413
 
-[node name="wind5" type="AnimatedSprite2D" parent="world"]
+[node name="wind5" type="AnimatedSprite2D" parent="level"]
 position = Vector2(412, 240)
 sprite_frames = SubResource("SpriteFrames_xuqvo")
 autoplay = "default"
 frame_progress = 0.675413
 
+[node name="spawn" type="Marker2D" parent="level"]
+position = Vector2(6, 175)
+
 [node name="ui" type="Control" parent="."]
+process_mode = 3
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("12_dg77c")
 
+[node name="title" type="Control" parent="ui"]
+process_mode = 3
+anchors_preset = 0
+offset_right = 480.0
+offset_bottom = 270.0
+script = ExtResource("15_074og")
+
+[node name="white" type="ColorRect" parent="ui/title"]
+custom_minimum_size = Vector2(480, 270)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="gfx" type="Control" parent="ui/title"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="background" type="TextureRect" parent="ui/title/gfx"]
+layout_mode = 2
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("15_yaehf")
+
+[node name="logo" type="TextureRect" parent="ui/title/gfx"]
+layout_mode = 2
+offset_left = 162.0
+offset_right = 354.0
+offset_bottom = 192.0
+pivot_offset = Vector2(96, 96)
+texture = ExtResource("16_074og")
+
+[node name="boat" type="TextureRect" parent="ui/title/gfx"]
+layout_mode = 2
+offset_left = -3.0
+offset_top = 32.0
+offset_right = 253.0
+offset_bottom = 288.0
+texture = ExtResource("17_cegan")
+
+[node name="MarginContainer" type="MarginContainer" parent="ui/title"]
+layout_mode = 2
+offset_left = 18.0
+offset_top = 16.0
+offset_right = 461.0
+offset_bottom = 254.0
+theme_override_constants/margin_left = 289
+theme_override_constants/margin_top = 133
+
+[node name="buttons" type="PanelContainer" parent="ui/title/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="ui/title/MarginContainer/buttons"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ui/title/MarginContainer/buttons/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="btn_start" type="Button" parent="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Start Game"
+
+[node name="btn_settings" type="Button" parent="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Settings"
+
+[node name="btn_credits" type="Button" parent="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Credits"
+
 [node name="info" type="CenterContainer" parent="ui"]
+visible = false
 custom_minimum_size = Vector2(480, 270)
 layout_mode = 0
 offset_right = 40.0
@@ -1166,13 +1256,12 @@ deliver to the nori factory
 "
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="ui/info/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="btn_level_start" type="Button" parent="ui/info/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Protect!"
 
 [node name="gui" type="MarginContainer" parent="ui"]
-visible = false
 offset_right = 367.0
 offset_bottom = 22.0
 size_flags_horizontal = 3
@@ -1209,3 +1298,8 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "CARGO 75%"
+
+[connection signal="pressed" from="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer/btn_start" to="." method="_on_btn_start_pressed"]
+[connection signal="pressed" from="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer/btn_settings" to="." method="_on_btn_settings_pressed"]
+[connection signal="pressed" from="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer/btn_credits" to="." method="_on_btn_credits_pressed"]
+[connection signal="pressed" from="ui/info/PanelContainer/MarginContainer/VBoxContainer/btn_level_start" to="." method="_on_btn_level_start_pressed"]
