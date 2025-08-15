@@ -2,7 +2,7 @@ extends Sprite2D
 class_name Algae
 
 const W:int = 480
-const H:int = 270
+const H:int = 272
 
 const S:int = 4
 const SV:Vector2i = Vector2i(S, S)
@@ -121,9 +121,9 @@ func update_sim():
       var p:Color = dst.get_pixelv(v)
       if p.g > 0.0 && p.g < 1.0:
         p.g = min(p.g + 1.0/GROW_STEPS, 1.0)
-        dst.fill_rect(Rect2i(v, SV), p)
+        dst.set_pixelv(v, p)
       elif p.b > 0.0:
         p.b = max(p.b - 1.0/GROW_STEPS, 0.0)
-        dst.fill_rect(Rect2i(v, SV), p)
+        dst.set_pixelv(v, p)
       if p.g == 1.0:
         num_algae += 1
