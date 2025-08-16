@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=4 uid="uid://0wsq7rtam4wh"]
+[gd_scene load_steps=56 format=4 uid="uid://0wsq7rtam4wh"]
 
 [ext_resource type="Shader" uid="uid://ckhnut06ijjw6" path="res://shaders/water.gdshader" id="1_7mycd"]
 [ext_resource type="Script" uid="uid://dexw3die45qhl" path="res://scripts/algae.gd" id="1_ig7tw"]
@@ -953,6 +953,8 @@ animations = [{
 "speed": 1.0
 }]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_074og"]
+
 [sub_resource type="GDScript" id="GDScript_ig7tw"]
 script/source = "extends Label
 
@@ -1145,6 +1147,7 @@ theme = ExtResource("12_dg77c")
 
 [node name="title" type="Control" parent="ui"]
 process_mode = 3
+visible = false
 anchors_preset = 0
 offset_right = 480.0
 offset_bottom = 270.0
@@ -1221,6 +1224,7 @@ layout_mode = 2
 text = "Credits"
 
 [node name="info" type="CenterContainer" parent="ui"]
+process_mode = 3
 visible = false
 custom_minimum_size = Vector2(480, 270)
 layout_mode = 0
@@ -1241,7 +1245,7 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 
 [node name="factory2" type="AnimatedSprite2D" parent="ui/info/PanelContainer/MarginContainer/VBoxContainer"]
-position = Vector2(359, 41)
+position = Vector2(349, 40)
 sprite_frames = SubResource("SpriteFrames_2cqfq")
 autoplay = "default"
 frame_progress = 0.154581
@@ -1251,8 +1255,11 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Protect the lake from the algae bloom!
 
-Scrub the algae and 
-deliver to the nori factory
+Scrub the algae and
+deliver it to the factory
+
+The lake is lost when the
+ bloom covers 80 %
 "
 horizontal_alignment = 1
 
@@ -1261,45 +1268,222 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Protect!"
 
+[node name="lost" type="CenterContainer" parent="ui"]
+visible = false
+custom_minimum_size = Vector2(480, 270)
+layout_mode = 0
+offset_right = 480.0
+offset_bottom = 270.0
+
+[node name="PanelContainer" type="PanelContainer" parent="ui/lost"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ui/lost/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ui/lost/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ui/lost/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "The Lake is Lost to the 
+Algae bloom.
+
+Game over
+
+algae collected:"
+horizontal_alignment = 1
+
+[node name="lab_collected" type="Label" parent="ui/lost/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "100435
+"
+horizontal_alignment = 1
+
+[node name="btn_continue" type="Button" parent="ui/lost/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Continue"
+
+[node name="store" type="CenterContainer" parent="ui"]
+custom_minimum_size = Vector2(480, 270)
+layout_mode = 0
+offset_right = 480.0
+offset_bottom = 270.0
+
+[node name="PanelContainer" type="PanelContainer" parent="ui/store"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ui/store/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ui/store/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "store"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="speed" type="PanelContainer" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/speed"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/speed/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/speed/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "+10 
+SPEED
+
+cost: 100
+"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/speed/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "buy"
+
+[node name="scrub" type="PanelContainer" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/scrub"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/scrub/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/scrub/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "+10
+ scrub radius
+
+cost: 100
+"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/scrub/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "buy"
+
+[node name="cargo" type="PanelContainer" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/cargo"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/cargo/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/cargo/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "+100
+ cargo
+
+cost: 100
+"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="ui/store/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/cargo/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "buy"
+
 [node name="gui" type="MarginContainer" parent="ui"]
-offset_right = 367.0
-offset_bottom = 22.0
+custom_minimum_size = Vector2(480, 270)
+layout_mode = 0
+offset_right = 238.0
+offset_bottom = 52.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+mouse_filter = 2
 theme = ExtResource("12_dg77c")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ui/gui"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ui/gui"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ui/gui/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="ui/gui/HBoxContainer"]
+[node name="PanelContainer2" type="PanelContainer" parent="ui/gui/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ui/gui/HBoxContainer/PanelContainer"]
+[node name="lab_algae" type="Label" parent="ui/gui/VBoxContainer/HBoxContainer/PanelContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "BLOOM 100%"
+
+[node name="PanelContainer3" type="PanelContainer" parent="ui/gui/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+
+[node name="lab_cargo" type="Label" parent="ui/gui/VBoxContainer/HBoxContainer/PanelContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "CARGO 1000"
+
+[node name="PanelContainer4" type="PanelContainer" parent="ui/gui/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+
+[node name="lab_factory" type="Label" parent="ui/gui/VBoxContainer/HBoxContainer/PanelContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Factory 0"
+
+[node name="HSeparator" type="HSeparator" parent="ui/gui/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_074og")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ui/gui/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PanelContainer" type="PanelContainer" parent="ui/gui/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ui/gui/VBoxContainer/HBoxContainer2/PanelContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "FPS: 60"
 script = SubResource("GDScript_ig7tw")
 
-[node name="PanelContainer2" type="PanelContainer" parent="ui/gui/HBoxContainer"]
-layout_mode = 2
-
-[node name="lab_algae" type="Label" parent="ui/gui/HBoxContainer/PanelContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "Algae: 120k"
-
-[node name="PanelContainer3" type="PanelContainer" parent="ui/gui/HBoxContainer"]
-layout_mode = 2
-
-[node name="lab_cargo" type="Label" parent="ui/gui/HBoxContainer/PanelContainer3"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "CARGO 75%"
-
 [connection signal="pressed" from="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer/btn_start" to="." method="_on_btn_start_pressed"]
 [connection signal="pressed" from="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer/btn_settings" to="." method="_on_btn_settings_pressed"]
 [connection signal="pressed" from="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer/btn_credits" to="." method="_on_btn_credits_pressed"]
 [connection signal="pressed" from="ui/info/PanelContainer/MarginContainer/VBoxContainer/btn_level_start" to="." method="_on_btn_level_start_pressed"]
+[connection signal="pressed" from="ui/lost/PanelContainer/MarginContainer/VBoxContainer/btn_continue" to="." method="_on_btn_continue_pressed"]

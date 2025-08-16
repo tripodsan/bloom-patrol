@@ -14,6 +14,7 @@ config/name="bloom-patrol"
 run/main_scene="uid://0wsq7rtam4wh"
 config/features=PackedStringArray("4.4", "Forward Plus")
 boot_splash/bg_color=Color(1, 1, 1, 1)
+boot_splash/use_filter=false
 boot_splash/image="uid://cw7xmyikmj5s6"
 config/icon="res://icon.svg"
 
@@ -27,7 +28,6 @@ window/energy_saving/keep_screen_on=false
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 window/dpi/allow_hidpi=false
-window/vsync/vsync_mode=0
 
 [input]
 

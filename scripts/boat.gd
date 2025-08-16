@@ -20,12 +20,14 @@ func _physics_process(delta):
   if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
     target_pos = get_viewport().get_mouse_position()
 
-  velocity = target_pos - position
+  velocity = (target_pos - position).limit_length(100.0)
+  if move_and_collide(velocity * delta) != null:
+    target_pos = position
+    velocity = Vector2.ZERO
+
   if velocity.length_squared() > 2:
     var a = rad_to_deg(PI + position.angle_to_point(target_pos))
     if a < 0: a += 360
     a = round(a / 45)
     sprite.frame = a
     boat_moved.emit(position)
-
-  move_and_slide()

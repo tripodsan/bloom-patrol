@@ -7,7 +7,7 @@ const H:int = 272
 const S:int = 4
 const SV:Vector2i = Vector2i(S, S)
 const ST:Vector2i = Vector2i(16, 16)
-const GROW_STEPS:int = 255
+const DT:float = 1.0/255.0
 const C_VOID:Color = Color(0, 0, 0, 0)
 
 var num_algae:int = 0
@@ -28,6 +28,17 @@ const DIRS:Array[Vector2i] = [
   Vector2i(-S, -S),
   Vector2i(0, -S),
   Vector2i(S, -S),
+]
+
+const DIRS_OFFSET:Array[int] = [
+  4 + 0 * W,
+  4 + 4 * W,
+  0 + 4 * W,
+  -4 + 4 * W,
+  -4 + 0 * W,
+  -4 + -4 * W,
+  0 + -4 * W,
+  4 + -4 * W,
 ]
 
 var img:Array[Image] = [null, null]
@@ -73,7 +84,7 @@ func clean(pos:Vector2, radius:int, max_collected:int)->int:
       var v = Vector2(x, y) + pos
       var p:Color = src.get_pixelv(v)
       if p.r == 0:
-        src.fill_rect(Rect2i(v, SV), Color.BLUE)
+        src.set_pixelv(v, Color.BLUE)
       if p.g == 1:
         collected += 1
   return collected;
@@ -81,9 +92,7 @@ func clean(pos:Vector2, radius:int, max_collected:int)->int:
 
 func _process(delta: float) -> void:
   if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-    var v:Vector2 = get_viewport().get_mouse_position()
-    v = v.snapped(SV)
-    img[idx].fill_rect(Rect2i(v, SV), Color(0, 1.0, 0, 1))
+    grow(get_viewport().get_mouse_position())
 
   update_sim()
   if num_algae_p != num_algae:
@@ -92,7 +101,11 @@ func _process(delta: float) -> void:
 
   texture.update(img[idx])
 
-func spread(src:Image, img:Image, pos:Vector2i):
+func grow(pos:Vector2)->void:
+    pos = pos.snapped(SV)
+    img[idx].set_pixelv(pos, Color.GREEN)
+
+func spread(src:Image, dst:Image, pos:Vector2i):
   var a:float = 0.0
   for d:Vector2i in DIRS:
     var v = pos + d
@@ -100,8 +113,8 @@ func spread(src:Image, img:Image, pos:Vector2i):
       var p = src.get_pixelv(v)
       var s = (100.0 if d.x == 0 || d.y == 0 else 200.0) - randf_range(0.0, 80)
       a += p.g / s
-  if a > 0.0:
-    img.fill_rect(Rect2i(pos, SV), Color(0, a, 0, 1))
+  if a >= DT:
+    dst.set_pixelv(pos, Color(0, a, 0, 1))
 
 func update_sim():
   var src:Image = img[idx]
@@ -112,18 +125,20 @@ func update_sim():
     for x:int in range(0, W, S):
       var v:Vector2i = Vector2i(x, y)
       var p:Color = src.get_pixelv(v)
-      if p.g == 0.0 && p.r == 0.0 && p.b == 0:
+      if p.a == 0:
         spread(src, dst, v)
   num_algae = 0
   for y:int in range(0, H, S):
     for x:int in range(0, W, S):
-      var v:Vector2i = Vector2i(x, y)
-      var p:Color = dst.get_pixelv(v)
+      var p:Color = dst.get_pixel(x, y)
       if p.g > 0.0 && p.g < 1.0:
-        p.g = min(p.g + 1.0/GROW_STEPS, 1.0)
-        dst.set_pixelv(v, p)
+        p.g = min(p.g + DT, 1.0)
+        dst.set_pixel(x, y, p)
       elif p.b > 0.0:
-        p.b = max(p.b - 1.0/GROW_STEPS, 0.0)
-        dst.set_pixelv(v, p)
+        p.b -= DT
+        if p.b < DT:
+          p.b = 0
+          p.a = 0
+        dst.set_pixel(x, y, p)
       if p.g == 1.0:
         num_algae += 1
