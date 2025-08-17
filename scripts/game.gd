@@ -34,7 +34,7 @@ func _ready()->void:
 
 func _on_algae_updated(amount:int, total: int, spawning:int)->void:
   var percent:int = 100 * amount / total
-  lab_algae.text = 'ALG %d%%' % percent
+  lab_algae.text = 'BLOOM %d%%' % percent
   if percent >= 80:
     game_over()
   if amount == 0 && spawning == 0:

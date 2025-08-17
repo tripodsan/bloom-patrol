@@ -80,7 +80,7 @@ func clear()->void:
 
 func clean(pos:Vector2, radius:int, max_collected:int)->int:
   var src = img[idx]
-  pos = pos.snapped(SV) - Vector2(8, 8)
+  pos = pos.snapped(SV)
   var collected:int = 0
   var r2 = radius * 2;
   for x in range(-r2, r2, 4):
