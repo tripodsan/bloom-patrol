@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=4 uid="uid://0wsq7rtam4wh"]
+[gd_scene load_steps=60 format=4 uid="uid://0wsq7rtam4wh"]
 
 [ext_resource type="Shader" uid="uid://ckhnut06ijjw6" path="res://shaders/water.gdshader" id="1_7mycd"]
 [ext_resource type="Script" uid="uid://dexw3die45qhl" path="res://scripts/algae.gd" id="1_ig7tw"]
@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://di031ul6tjdot" path="res://assets/logo.png" id="16_074og"]
 [ext_resource type="Texture2D" uid="uid://b2vmg14bw5f31" path="res://assets/title-boat.png" id="17_cegan"]
 [ext_resource type="Script" uid="uid://kjxj8x80tr7t" path="res://scripts/store.gd" id="19_cegan"]
+[ext_resource type="Shader" uid="uid://c7jjo6n1kpd54" path="res://shaders/tint.gdshader" id="20_82xsv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_272bh"]
 shader = ExtResource("1_7mycd")
@@ -965,6 +966,11 @@ func _process(delta: float) -> void:
   text = 'FPS: %d' % Engine.get_frames_per_second()
 "
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_getpj"]
+shader = ExtResource("20_82xsv")
+shader_parameter/black = Color(0, 0.133333, 0, 1)
+shader_parameter/white = Color(0.941176, 0.972549, 1, 1)
+
 [node name="game" type="Node2D"]
 texture_filter = 1
 script = ExtResource("1_ycdy4")
@@ -1479,20 +1485,24 @@ layout_mode = 2
 text = "10$"
 
 [node name="turtle_lab" type="Label" parent="ui/store/MarginContainer/VBoxContainer/PanelContainer2/items"]
+visible = false
 layout_mode = 2
 text = "Turtle"
 
 [node name="turtle_val" type="Label" parent="ui/store/MarginContainer/VBoxContainer/PanelContainer2/items"]
+visible = false
 layout_mode = 2
 text = "0 ->"
 horizontal_alignment = 2
 
 [node name="turtle_upd" type="Label" parent="ui/store/MarginContainer/VBoxContainer/PanelContainer2/items"]
+visible = false
 layout_mode = 2
 text = "1"
 horizontal_alignment = 2
 
 [node name="turtle_cost" type="Button" parent="ui/store/MarginContainer/VBoxContainer/PanelContainer2/items"]
+visible = false
 layout_mode = 2
 text = "10$"
 
@@ -1572,13 +1582,14 @@ mouse_filter = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_074og")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="ui/gui/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="PanelContainer" type="PanelContainer" parent="ui/gui/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ui/gui/VBoxContainer/HBoxContainer2/PanelContainer"]
+[node name="fps" type="Label" parent="ui/gui/VBoxContainer/HBoxContainer2/PanelContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "FPS: 60"
@@ -1600,6 +1611,7 @@ offset_right = 480.0
 offset_bottom = 270.0
 
 [node name="background" type="TextureRect" parent="ui/credits"]
+layout_mode = 0
 offset_right = 480.0
 offset_bottom = 270.0
 texture = ExtResource("15_yaehf")
@@ -1665,6 +1677,16 @@ text = "adobe stock"
 layout_mode = 2
 size_flags_horizontal = 4
 text = "back to title"
+
+[node name="tint" type="ColorRect" parent="ui"]
+material = SubResource("ShaderMaterial_getpj")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [connection signal="pressed" from="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer/btn_start" to="." method="_on_btn_start_pressed"]
 [connection signal="pressed" from="ui/title/MarginContainer/buttons/MarginContainer/VBoxContainer/btn_settings" to="." method="_on_btn_settings_pressed"]

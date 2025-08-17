@@ -68,6 +68,7 @@ func game_start():
   level.start()
 
 func game_over():
+  level.stop()
   get_tree().paused = true
   lost.visible = true
   var earning:int = ceil(level.num_factory * algae_price)

@@ -15,6 +15,8 @@ var num_factory:int = 0
 
 var scrub_radius:int = 4
 
+var tween:Tween
+
 func _ready()->void:
   algae.algae_updated.connect(_on_algae_updated)
   boat.boat_moved.connect(_on_boat_moved)
@@ -30,7 +32,10 @@ func reset()->void:
 
 func start()->void:
   algae.grow(spawn.position)
-  pass
+
+func stop()->void:
+  if tween:
+    tween.stop()
 
 func apply_upgrades(store:Store)->void:
   boat.max_cargo = store.upgrades.cargo.value()
@@ -47,7 +52,15 @@ func _on_boat_moved(pos:Vector2)->void:
     boat_updated.emit(boat.num_cargo, boat.max_cargo)
 
 func _on_body_entered_drop_off(body:Node2D)->void:
+  if tween:
+    tween.stop()
+  tween = create_tween()
+  var from = Vector2i(num_factory, boat.num_cargo)
+  var to = Vector2i(num_factory + boat.num_cargo, 0)
   num_factory += boat.num_cargo
   boat.num_cargo = 0
-  boat_updated.emit(boat.num_cargo, boat.max_cargo)
-  factory_updated.emit(num_factory)
+  tween.tween_method(_transfer_algae, from, to, 1)
+
+func _transfer_algae(v:Vector2i)->void:
+  factory_updated.emit(v.x)
+  boat_updated.emit(boat.num_cargo + v.y, boat.max_cargo)
