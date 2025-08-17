@@ -13,8 +13,10 @@ const C_VOID:Color = Color(0, 0, 0, 0)
 var num_algae:int = 0
 var num_algae_p:int = -1
 var max_algae:int = 0
+var num_spawning:int = 0
+var num_spawning_p:int = 0
 
-signal algae_updated(amount:int, total:int)
+signal algae_updated(amount:int, total:int, spawning:int)
 
 @export
 var land:TileMapLayer
@@ -45,6 +47,9 @@ var img:Array[Image] = [null, null]
 var idx:int = 0
 
 func _ready() -> void:
+  clear()
+
+func clear()->void:
   for i:int in range(0, 2):
     img[i] = Image.create_empty(W, H, false, Image.FORMAT_RGBA8)
     img[i].fill(C_VOID)
@@ -77,8 +82,9 @@ func clean(pos:Vector2, radius:int, max_collected:int)->int:
   var src = img[idx]
   pos = pos.snapped(SV) - Vector2(8, 8)
   var collected:int = 0
-  for x in range(0, radius * 4, 4):
-    for y in range(0, radius * 4, 4):
+  var r2 = radius * 2;
+  for x in range(-r2, r2, 4):
+    for y in range(-r2, r2, 4):
       if collected >= max_collected:
         return collected
       var v = Vector2(x, y) + pos
@@ -95,11 +101,12 @@ func _process(delta: float) -> void:
     grow(get_viewport().get_mouse_position())
 
   update_sim()
-  if num_algae_p != num_algae:
-    algae_updated.emit(num_algae, max_algae)
-    num_algae_p = num_algae
-
   texture.update(img[idx])
+  if num_algae_p != num_algae || num_spawning_p != num_spawning:
+    algae_updated.emit(num_algae, max_algae, num_spawning)
+  num_algae_p = num_algae
+  num_spawning_p = num_spawning
+
 
 func grow(pos:Vector2)->void:
     pos = pos.snapped(SV)
@@ -128,12 +135,14 @@ func update_sim():
       if p.a == 0:
         spread(src, dst, v)
   num_algae = 0
+  num_spawning = 0
   for y:int in range(0, H, S):
     for x:int in range(0, W, S):
       var p:Color = dst.get_pixel(x, y)
       if p.g > 0.0 && p.g < 1.0:
         p.g = min(p.g + DT, 1.0)
         dst.set_pixel(x, y, p)
+        num_spawning += 1
       elif p.b > 0.0:
         p.b -= DT
         if p.b < DT:

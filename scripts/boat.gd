@@ -1,7 +1,7 @@
 extends CharacterBody2D
 class_name Boat
 
-@export var speed = 300
+var speed = 100
 
 @onready var sprite: AnimatedSprite2D = $sprite
 
@@ -20,7 +20,7 @@ func _physics_process(delta):
   if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
     target_pos = get_viewport().get_mouse_position()
 
-  velocity = (target_pos - position).limit_length(100.0)
+  velocity = (target_pos - position).limit_length(speed)
   if move_and_collide(velocity * delta) != null:
     target_pos = position
     velocity = Vector2.ZERO

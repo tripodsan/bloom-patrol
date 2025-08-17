@@ -1,21 +1,24 @@
-[gd_resource type="Theme" load_steps=11 format=3 uid="uid://224gym0spw7s"]
+[gd_resource type="Theme" load_steps=13 format=3 uid="uid://224gym0spw7s"]
 
 [ext_resource type="StyleBox" uid="uid://cvx4fdxbbnl0d" path="res://assets/button-box.tres" id="1_3nxcy"]
 [ext_resource type="Texture2D" uid="uid://dx3lkgt1sujrj" path="res://assets/ui.png" id="1_8344u"]
+[ext_resource type="Texture2D" uid="uid://dvu4prp1lerhr" path="res://assets/button.png" id="1_f2iiy"]
 [ext_resource type="StyleBox" uid="uid://bx255xesyoxhi" path="res://assets/button-box-pressed.tres" id="2_3nxcy"]
 [ext_resource type="FontFile" uid="uid://du8fa7scl1q0" path="res://assets/TinyAndChunkyRegular-m2Dz5.ttf" id="2_b5p3p"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3nxcy"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.1, 0.1, 0.1, 0.3)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xut4w"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+texture = ExtResource("1_f2iiy")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(256, 0, 128, 32)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3nxcy"]
 
@@ -24,6 +27,14 @@ content_margin_left = 11.0
 content_margin_top = 4.0
 content_margin_right = 10.0
 content_margin_bottom = 4.0
+texture = ExtResource("1_8344u")
+texture_margin_left = 16.0
+texture_margin_top = 10.0
+texture_margin_right = 16.0
+texture_margin_bottom = 10.0
+region_rect = Rect2(0, 0, 96, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f2iiy"]
 texture = ExtResource("1_8344u")
 texture_margin_left = 16.0
 texture_margin_top = 10.0
@@ -62,7 +73,7 @@ spacing_bottom = 1
 default_font = SubResource("FontVariation_3nxcy")
 default_font_size = 10
 Button/colors/font_color = Color(0, 0, 0, 1)
-Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
+Button/colors/font_disabled_color = Color(1, 1, 1, 1)
 Button/colors/font_focus_color = Color(0, 0, 0, 1)
 Button/colors/font_hover_color = Color(0, 0, 0, 1)
 Button/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
@@ -78,12 +89,16 @@ Button/constants/align_to_largest_stylebox = 0
 Button/constants/h_separation = 4
 Button/constants/icon_max_width = 0
 Button/constants/outline_size = 0
-Button/styles/disabled = SubResource("StyleBoxFlat_3nxcy")
+Button/styles/disabled = SubResource("StyleBoxTexture_xut4w")
 Button/styles/focus = SubResource("StyleBoxEmpty_3nxcy")
 Button/styles/hover = ExtResource("1_3nxcy")
 Button/styles/normal = ExtResource("1_3nxcy")
 Button/styles/pressed = ExtResource("2_3nxcy")
+Label/colors/font_color = Color(0, 0, 0, 1)
+Label/colors/font_outline_color = Color(1, 1, 1, 1)
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_3nxcy")
+PanelContainerMargin/base_type = &"PanelContainer"
+PanelContainerMargin/styles/panel = SubResource("StyleBoxTexture_f2iiy")
 ProgressBar/colors/font_color = Color(1, 1, 1, 1)
 ProgressBar/styles/background = SubResource("StyleBoxFlat_8344u")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_b5p3p")

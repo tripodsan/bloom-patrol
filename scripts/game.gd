@@ -8,23 +8,37 @@ class_name Game
 
 @onready var level: Level = $level
 @onready var title: Control = $ui/title
-@onready var info: CenterContainer = $ui/info
-@onready var gui: MarginContainer = $ui/gui
-@onready var lost: CenterContainer = $ui/lost
-@onready var store: CenterContainer = $ui/store
+@onready var info: Control = $ui/info
+@onready var gui: Control = $ui/gui
+@onready var lost: Control = $ui/lost
+@onready var store: Store = $ui/store
+@onready var credits: Control = $ui/credits
+@onready var win: Control = $ui/win
 
+var algae_price:float = 0.1
 
 func _ready()->void:
-  level_init()
-  game_start()
+  credits.visible = false
+  title.visible = false
+  level.visible = false
+  info.visible = false
+  lost.visible = false
+  store.visible = false
+  gui.visible = false
+  win.visible = false
+  #level_init()
+  #game_start()
   show_title()
+  #_on_btn_continue_pressed()
   #game_over()
 
-func _on_algae_updated(amount:int, total: int)->void:
+func _on_algae_updated(amount:int, total: int, spawning:int)->void:
   var percent:int = 100 * amount / total
   lab_algae.text = 'ALG %d%%' % percent
   if percent >= 80:
     game_over()
+  if amount == 0 && spawning == 0:
+    game_win()
 
 func _on_boat_updated(amount:int, total:int)->void:
   lab_cargo.text = 'CARGO %d' % amount
@@ -34,11 +48,6 @@ func _on_factory_updated(amount:int)->void:
 
 func show_title():
   title.visible = true
-  level.visible = false
-  info.visible = false
-  lost.visible = false
-  store.visible = false
-  gui.visible = false
   get_tree().paused = true
   title.animate()
 
@@ -46,22 +55,38 @@ func level_init():
   title.visible = false
   info.visible = true
   level.visible = true
+  level.algae_updated.connect(_on_algae_updated)
+  level.boat_updated.connect(_on_boat_updated)
+  level.factory_updated.connect(_on_factory_updated)
   level.reset()
 
 func game_start():
   info.visible = false
   gui.visible = true
   get_tree().paused = false
+  level.apply_upgrades(store)
   level.start()
-
-  level.algae_updated.connect(_on_algae_updated)
-  level.boat_updated.connect(_on_boat_updated)
-  level.factory_updated.connect(_on_factory_updated)
 
 func game_over():
   get_tree().paused = true
   lost.visible = true
-  lab_collected.text = "%d\n" % level.num_factory
+  var earning:int = ceil(level.num_factory * algae_price)
+  store.cash += earning
+  _update_collected(0)
+  create_tween() \
+    .set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
+    .tween_method(_update_collected, 0, earning, 1.5) \
+    .set_delay(1)
+
+func game_win():
+  win.visible = true
+  gui.visible = false
+  get_tree().paused = true
+  $%lab_win_cash.text = '%d$' % store.cash
+
+func _update_collected(v:int)->void:
+  lab_collected.text = "%d $\n" % v
+  _on_factory_updated(max(level.num_factory - v / algae_price, 0))
 
 func _on_btn_start_pressed() -> void:
   level_init()
@@ -70,12 +95,29 @@ func _on_btn_level_start_pressed() -> void:
   game_start()
 
 func _on_btn_settings_pressed() -> void:
-  pass # Replace with function body.
-
+  pass
 
 func _on_btn_credits_pressed() -> void:
-  pass # Replace with function body.
+  title.visible = false
+  credits.visible = true
 
 func _on_btn_continue_pressed() -> void:
   lost.visible = false
-  store.visible = true
+  gui.visible = false
+  store.open()
+
+func _on_btn_credits_back_pressed() -> void:
+  title.visible = true
+  credits.visible = false
+
+func _on_btn_restart_pressed() -> void:
+  store.close()
+  level_init()
+  game_start()
+
+func _on_btn_win_continue_pressed() -> void:
+  store.reset()
+  win.visible = false
+  level.visible = false
+  gui.visible = false
+  show_title()
