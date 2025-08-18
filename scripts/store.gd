@@ -67,6 +67,7 @@ func _on_btn_pressed(up:Upgrade)->void:
   if new_cash >= 0:
     cash = new_cash
     update_gfx()
+    $sfx_buy.play()
 
 
 func open()->void:

@@ -31,3 +31,6 @@ func _physics_process(delta):
     a = round(a / 45)
     sprite.frame = a
     boat_moved.emit(position)
+
+func scrub()->void:
+  $bloop.play()

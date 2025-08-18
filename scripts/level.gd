@@ -50,8 +50,14 @@ func _on_boat_moved(pos:Vector2)->void:
   if collected > 0:
     boat.num_cargo += collected
     boat_updated.emit(boat.num_cargo, boat.max_cargo)
+    if boat.num_cargo == boat.max_cargo:
+      $full.play()
+    else:
+      boat.scrub()
 
 func _on_body_entered_drop_off(body:Node2D)->void:
+  if boat.num_cargo == 0:
+    return
   if tween:
     tween.stop()
   tween = create_tween()
@@ -60,6 +66,7 @@ func _on_body_entered_drop_off(body:Node2D)->void:
   num_factory += boat.num_cargo
   boat.num_cargo = 0
   tween.tween_method(_transfer_algae, from, to, 1)
+  $drop.play()
 
 func _transfer_algae(v:Vector2i)->void:
   factory_updated.emit(v.x)

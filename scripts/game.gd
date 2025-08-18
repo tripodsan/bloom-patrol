@@ -90,33 +90,40 @@ func _update_collected(v:int)->void:
   _on_factory_updated(max(level.num_factory - v / algae_price, 0))
 
 func _on_btn_start_pressed() -> void:
+  $sfx_klick.play()
   level_init()
 
 func _on_btn_level_start_pressed() -> void:
+  $sfx_klick.play()
   game_start()
 
 func _on_btn_settings_pressed() -> void:
   pass
 
 func _on_btn_credits_pressed() -> void:
+  $sfx_klick.play()
   title.visible = false
   credits.visible = true
 
 func _on_btn_continue_pressed() -> void:
+  $sfx_klick.play()
   lost.visible = false
   gui.visible = false
   store.open()
 
 func _on_btn_credits_back_pressed() -> void:
+  $sfx_klick.play()
   title.visible = true
   credits.visible = false
 
 func _on_btn_restart_pressed() -> void:
+  $sfx_klick.play()
   store.close()
   level_init()
   game_start()
 
 func _on_btn_win_continue_pressed() -> void:
+  $sfx_klick.play()
   store.reset()
   win.visible = false
   level.visible = false
