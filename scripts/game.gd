@@ -14,6 +14,7 @@ class_name Game
 @onready var store: Store = $ui/store
 @onready var credits: Control = $ui/credits
 @onready var win: Control = $ui/win
+@onready var bg_sound: AudioStreamPlayer = $bg_sound
 
 var algae_price:float = 0.1
 
@@ -66,9 +67,14 @@ func game_start():
   get_tree().paused = false
   level.apply_upgrades(store)
   level.start()
+  bg_sound.bus = 'bg'
+  if !bg_sound.playing:
+    bg_sound.play()
 
 func game_over():
   level.stop()
+  bg_sound.bus = 'bg_muffled'
+  $sfx_game_over.play()
   get_tree().paused = true
   lost.visible = true
   var earning:int = ceil(level.num_factory * algae_price)
@@ -82,7 +88,9 @@ func game_over():
 func game_win():
   win.visible = true
   gui.visible = false
+  bg_sound.stop()
   get_tree().paused = true
+  $sfx_game_win.play()
   $%lab_win_cash.text = '%d$' % store.cash
 
 func _update_collected(v:int)->void:
