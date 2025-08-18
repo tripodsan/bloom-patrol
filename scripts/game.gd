@@ -67,13 +67,13 @@ func game_start():
   get_tree().paused = false
   level.apply_upgrades(store)
   level.start()
-  bg_sound.bus = 'bg'
+  bg_sound.volume_db = 0
   if !bg_sound.playing:
     bg_sound.play()
 
 func game_over():
   level.stop()
-  bg_sound.bus = 'bg_muffled'
+  bg_sound.volume_db = -15
   $sfx_game_over.play()
   get_tree().paused = true
   lost.visible = true
