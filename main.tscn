@@ -986,7 +986,8 @@ script = ExtResource("1_ycdy4")
 [node name="bg_sound" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 stream = ExtResource("2_lswn8")
-bus = &"bg_muffled"
+bus = &"bg"
+playback_type = 1
 
 [node name="sfx_klick" type="AudioStreamPlayer" parent="."]
 process_mode = 3
@@ -1159,7 +1160,7 @@ frame_progress = 0.154581
 position = Vector2(432, 131)
 sprite_frames = SubResource("SpriteFrames_074og")
 autoplay = "default"
-frame_progress = 0.273169
+frame_progress = 0.346701
 
 [node name="wind" type="AnimatedSprite2D" parent="level"]
 position = Vector2(13, 77)
